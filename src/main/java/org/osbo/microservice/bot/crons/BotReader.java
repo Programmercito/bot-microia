@@ -1,11 +1,12 @@
-package org.osbo.microservice.ia.crons;
+package org.osbo.microservice.bot.crons;
 
 import org.osbo.core.bots.properties.PropertiesBot;
+import org.springframework.stereotype.Component;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
-
-public class BotService {
+@Component
+public class BotReader {
     String token = PropertiesBot.getPropertie("bot.tokenprincipal");
     TelegramBot bot = new TelegramBot(token);
 
