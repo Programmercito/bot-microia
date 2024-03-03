@@ -1,4 +1,4 @@
-package org.osbo.microservice.bot.messages;
+package org.osbo.microservice.bot.messages.pojos;
 
 import java.io.Serializable;
 
