@@ -13,9 +13,10 @@ import com.pengrad.telegrambot.UpdatesListener;
 public class BotReader {
     String token = PropertiesBot.getPropertie("bot.tokenprincipal");
     TelegramBot bot = new TelegramBot(token);
+
     @Autowired
     QueueProcessMessage queueProcess;
-
+    
     public void process() {
         bot.setUpdatesListener(updates -> {
             updates.forEach(update -> {
@@ -24,7 +25,6 @@ public class BotReader {
                     message.setIdchat(update.message().chat().id());
                     message.setMessage(update.message().text());
                     queueProcess.queueProcessMessage(message);
-                    System.out.println("Mensage encolado");
                 }
             });
             return UpdatesListener.CONFIRMED_UPDATES_ALL;

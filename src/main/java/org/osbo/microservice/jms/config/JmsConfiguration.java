@@ -9,8 +9,6 @@ import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
-import org.springframework.scheduling.quartz.SimpleThreadPoolTaskExecutor;
-
 import jakarta.jms.ConnectionFactory;
 
 @EnableJms
@@ -22,7 +20,6 @@ public class JmsConfiguration {
 		DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
 		// This provides all auto-configured defaults to this factory, including the message converter
 		configurer.configure(factory, connectionFactory);
-        factory.setTaskExecutor(new SimpleThreadPoolTaskExecutor());
         factory.setConcurrency("1");
 		// You could still override some settings if necessary.
 		return factory;
