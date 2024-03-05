@@ -3,7 +3,14 @@ package org.osbo.microservice.bot.messages.pojos;
 public class MessageProcess {
     private String message;
     private String tipo;
+    private String username;
     private Long idchat;
+    public String getUsername() {
+        return username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
     public Long getIdchat() {
         return idchat;
     }

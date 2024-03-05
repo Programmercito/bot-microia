@@ -16,7 +16,7 @@ public class BotReader {
 
     @Autowired
     QueueProcessMessage queueProcess;
-    
+
     public void process() {
         bot.setUpdatesListener(updates -> {
             updates.forEach(update -> {
@@ -24,6 +24,7 @@ public class BotReader {
                     MessageProcess message = new MessageProcess();
                     message.setIdchat(update.message().chat().id());
                     message.setMessage(update.message().text());
+                    message.setUsername(update.message().chat().username());
                     queueProcess.queueProcessMessage(message);
                 }
             });
