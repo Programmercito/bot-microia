@@ -9,6 +9,7 @@ public class ReceiverIa {
 
     @JmsListener(destination = "queue.ia", containerFactory = "myFactory")
     public void consumeIa(MessageIa message) {
-
+        System.out.println("Mensaje recibido por la IA");
+        System.out.println("Mensaje: " + message.getMessage());
     }
 }
