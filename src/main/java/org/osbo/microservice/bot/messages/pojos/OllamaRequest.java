@@ -1,6 +1,6 @@
 package org.osbo.microservice.bot.messages.pojos;
 
-public class OllamaRequest {
+public class OllamaRequest implements java.io.Serializable{
     private String model;
     private String prompt;
     private boolean stream = false;

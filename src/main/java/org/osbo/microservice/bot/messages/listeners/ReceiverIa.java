@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
+import kong.unirest.core.HttpResponse;
+import kong.unirest.core.JsonNode;
+import kong.unirest.core.Unirest;
+import kong.unirest.core.UnirestException;
 
 @Component
 public class ReceiverIa {
@@ -28,7 +28,7 @@ public class ReceiverIa {
         System.out.println("Mensaje recibido por la IA");
         System.out.println("Mensaje: " + message.getMessage());
         System.out.println("Tipo: " + message.getTipo());
-        Unirest.setTimeouts(100000, 100000);
+        Unirest.config().connectTimeout(1000000);
         Chats chat = chatService.getChatByIdUserAndTipo(message.getIdchat(), message.getTipo());
         OllamaRequest ollamaRequest = new OllamaRequest();
 
@@ -42,7 +42,9 @@ public class ReceiverIa {
         ollamaRequest.setPrompt(message.getMessage());
         HttpResponse<JsonNode> response = null;
         try {
-            response = Unirest.post("http://" + message.getTipo() + ":11434/api/generate")
+            String ur = "http://" + message.getTipo() + ":11434/api/generate";
+            response = Unirest.post(ur)
+                    .header("Content-Type", "application/json")
                     .body(ollamaRequest)
                     .asJson();
         } catch (UnirestException e) {
@@ -52,7 +54,7 @@ public class ReceiverIa {
 
         if (response != null) {
             String res = response.getBody().getObject().getString("response");
-            String context = response.getBody().getObject().getString("context");
+            String context = response.getBody().getObject().getJSONArray("context").join(",");
             if (chat == null) {
                 chat = new Chats();
                 chat.setIduser(message.getIdchat());
@@ -60,10 +62,10 @@ public class ReceiverIa {
             }
             chat.setContext(context);
             chatService.saveChat(chat);
-            MessageSend messerror = new MessageSend();
-            message.setIdchat(message.getIdchat());
-            message.setMessage(res);
-            queueSendMessage.queueProcessMessage(messerror);
+            MessageSend respuestaia = new MessageSend();
+            respuestaia.setIdchat(message.getIdchat());
+            respuestaia.setMessage(res);
+            queueSendMessage.queueProcessMessage(respuestaia);
 
         } else {
             System.out.println("Error en la respuesta de la IA");
@@ -73,7 +75,6 @@ public class ReceiverIa {
             queueSendMessage.queueProcessMessage(messerror);
         }
 
-        chatService.saveChat(chat);
 
     }
 }
