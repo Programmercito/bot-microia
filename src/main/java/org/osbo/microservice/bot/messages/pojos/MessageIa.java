@@ -4,6 +4,7 @@ public class MessageIa {
     private String message;
     private String tipo;
     private Long idchat;
+    
     public String getTipo() {
         return tipo;
     }
