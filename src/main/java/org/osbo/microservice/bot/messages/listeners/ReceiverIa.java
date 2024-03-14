@@ -62,10 +62,11 @@ public class ReceiverIa {
                 chat = new Chats();
                 chat.setIduser(message.getIdchat());
                 chat.setTipo(message.getTipo());
-                chat.setCantidad(chat.getCantidad() + 1);
+                chat.setCantidad( 0);
             }
+            chat.setCantidad(chat.getCantidad() + 1);
             chat.setContext(context);
-            if (chat.getCantidad() == 15) {
+            if (chat.getCantidad() >= 15) {
                 chat.setCantidad(0);
                 chat.setContext("");
             }
