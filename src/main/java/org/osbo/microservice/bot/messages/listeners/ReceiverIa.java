@@ -1,5 +1,8 @@
 package org.osbo.microservice.bot.messages.listeners;
 
+import java.util.stream.IntStream;
+
+import org.osbo.core.arrays.ArrayLong;
 import org.osbo.microservice.bot.messages.pojos.MessageIa;
 import org.osbo.microservice.bot.messages.pojos.MessageSend;
 import org.osbo.microservice.bot.messages.pojos.OllamaRequest;
@@ -14,6 +17,7 @@ import kong.unirest.core.HttpResponse;
 import kong.unirest.core.JsonNode;
 import kong.unirest.core.Unirest;
 import kong.unirest.core.UnirestException;
+import kong.unirest.core.json.JSONArray;
 
 @Component
 public class ReceiverIa {
@@ -28,16 +32,15 @@ public class ReceiverIa {
         System.out.println("Mensaje recibido por la IA");
         System.out.println("Mensaje: " + message.getMessage());
         System.out.println("Tipo: " + message.getTipo());
-        Unirest.config().connectTimeout(1000000);
         Chats chat = chatService.getChatByIdUserAndTipo(message.getIdchat(), message.getTipo());
         OllamaRequest ollamaRequest = new OllamaRequest();
 
         if (chat != null) {
-            ollamaRequest.setContext(chat.getContext());
+            ollamaRequest.setContext(ArrayLong.getArrayLong(chat.getContext()));
         }
         if (message.getTipo().equals("bot1llama")) {
             ollamaRequest.setModel("llama2");
-            ollamaRequest.setSystem("");
+            ollamaRequest.setSystem("talk in spanish how to mario bros");
         }
         ollamaRequest.setPrompt(message.getMessage());
         HttpResponse<JsonNode> response = null;
@@ -48,23 +51,28 @@ public class ReceiverIa {
                     .body(ollamaRequest)
                     .asJson();
         } catch (UnirestException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            response = null;
         }
 
         if (response != null) {
             String res = response.getBody().getObject().getString("response");
-            String context = response.getBody().getObject().getJSONArray("context").join(",");
+            JSONArray arra = response.getBody().getObject().getJSONArray("context");
+            String context = arra.join(",");
             if (chat == null) {
                 chat = new Chats();
                 chat.setIduser(message.getIdchat());
                 chat.setTipo(message.getTipo());
+                chat.setCantidad(chat.getCantidad() + 1);
             }
             chat.setContext(context);
+            if (chat.getCantidad() == 15) {
+                chat.setCantidad(0);
+                chat.setContext("");
+            }
             chatService.saveChat(chat);
             MessageSend respuestaia = new MessageSend();
             respuestaia.setIdchat(message.getIdchat());
-            respuestaia.setMessage(res);
+            respuestaia.setMessage(res + " " + chat.getCantidad() + "/15");
             queueSendMessage.queueProcessMessage(respuestaia);
 
         } else {
@@ -74,7 +82,6 @@ public class ReceiverIa {
             message.setMessage("Error en la respuesta de la IA, por favor vuelva a intentar en unos momentos");
             queueSendMessage.queueProcessMessage(messerror);
         }
-
 
     }
 }

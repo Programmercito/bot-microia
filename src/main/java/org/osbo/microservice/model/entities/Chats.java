@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
 @Entity
@@ -18,8 +19,19 @@ public class Chats {
     private long iduser;
     @Column(name = "tipo")
     private String tipo;
-    @Column(name = "context")
+    @Lob
+    @Column(name = "context", columnDefinition = "CLOB")
     private String context;
+    @Column(name = "cantidad")
+    private int cantidad;
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
 
     public long getId() {
         return id;

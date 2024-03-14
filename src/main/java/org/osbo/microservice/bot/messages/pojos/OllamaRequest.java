@@ -1,17 +1,17 @@
 package org.osbo.microservice.bot.messages.pojos;
 
-public class OllamaRequest implements java.io.Serializable{
+public class OllamaRequest implements java.io.Serializable {
     private String model;
     private String prompt;
     private boolean stream = false;
     private String system;
-    private String context;
+    private long[] context;
 
-    public String getContext() {
+    public long[] getContext() {
         return context;
     }
 
-    public void setContext(String context) {
+    public void setContext(long[] context) {
         this.context = context;
     }
 
