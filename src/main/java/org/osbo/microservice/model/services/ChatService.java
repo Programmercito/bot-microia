@@ -2,7 +2,6 @@ package org.osbo.microservice.model.services;
 
 import org.osbo.microservice.model.entities.Chats;
 import org.osbo.microservice.model.repositories.ChatRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
