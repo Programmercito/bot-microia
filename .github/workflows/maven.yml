@@ -49,7 +49,8 @@ jobs:
       run: |
         echo "${{ secrets.KEY }}" > ./private_key
         chmod 600 ./private_key
+        ls -la
         ssh -o StrictHostKeyChecking=no -i ./private_key target ${{ secrets.USER }}@${{ secrets.SERVER }} "ls -la"
-        scp -o StrictHostKeyChecking=no -i ./private_key -r target ${{ secrets.USER }}@${{ secrets.SERVER }}:/opt/bot
+#        scp -o StrictHostKeyChecking=no -i ./private_key -r target ${{ secrets.USER }}@${{ secrets.SERVER }}:/opt/bot
         
-        scp -o StrictHostKeyChecking=no -i ./private_key -r target ${{ secrets.USER }}@${{ secrets.SERVER }}:/opt/bot
+#        scp -o StrictHostKeyChecking=no -i ./private_key -r target ${{ secrets.USER }}@${{ secrets.SERVER }}:/opt/bot
