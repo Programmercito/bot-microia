@@ -52,8 +52,8 @@ jobs:
         ls -la
         ssh -o StrictHostKeyChecking=no -i ./private_key ${{ secrets.USER }}@${{ secrets.SERVER }} "cd /opt/bot && rm -rf *"
         scp -o StrictHostKeyChecking=no -i ./private_key -r microservice-0.0.1-SNAPSHOT.jar ${{ secrets.USER }}@${{ secrets.SERVER }}:/opt/bot
-        ssh -o StrictHostKeyChecking=no -i ./private_key ${{ secrets.USER }}@${{ secrets.SERVER }} "cd /opt/bot && ls -la"
         ssh -o StrictHostKeyChecking=no -i ./private_key ${{ secrets.USER }}@${{ secrets.SERVER }} "cp /opt/deploy/botia/docker/maven.dockerfile /opt/bot"
+        ssh -o StrictHostKeyChecking=no -i ./private_key ${{ secrets.USER }}@${{ secrets.SERVER }} "cd /opt/bot && ls -la"
         ssh -o StrictHostKeyChecking=no -i ./private_key ${{ secrets.USER }}@${{ secrets.SERVER }} "docker build -t botia:latest -f /opt/bot/maven.dockerfile"
         ssh -o StrictHostKeyChecking=no -i ./private_key ${{ secrets.USER }}@${{ secrets.SERVER }} "docker push"
         
