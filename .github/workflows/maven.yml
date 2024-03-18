@@ -13,7 +13,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v3
-    - name: Set up JDK 17
+    - name: Set up JDK
       uses: actions/setup-java@v3
       with:
         java-version: '21'
@@ -55,7 +55,7 @@ jobs:
         ssh -o StrictHostKeyChecking=no -i ./private_key ${{ secrets.USER }}@${{ secrets.SERVER }} "cp /opt/deploy/botia/docker/maven.dockerfile /opt/bot"
         ssh -o StrictHostKeyChecking=no -i ./private_key ${{ secrets.USER }}@${{ secrets.SERVER }} "cd /opt/bot && ls -la"
         ssh -o StrictHostKeyChecking=no -i ./private_key ${{ secrets.USER }}@${{ secrets.SERVER }} "docker build -t botia:latest -f /opt/bot/maven.dockerfile /opt/bot/"
-        ssh -o StrictHostKeyChecking=no -i ./private_key ${{ secrets.USER }}@${{ secrets.SERVER }} "docker push botia:latest" 
+        ssh -o StrictHostKeyChecking=no -i ./private_key ${{ secrets.USER }}@${{ secrets.SERVER }} "docker push localhost:32000/botia:latest" 
         ssh -o StrictHostKeyChecking=no -i ./private_key ${{ secrets.USER }}@${{ secrets.SERVER }} "microk8s kubectl -apply /opt/docker/botia/kub/services.yaml" 
         
 #        scp -o StrictHostKeyChecking=no -i ./private_key -r target ${{ secrets.USER }}@${{ secrets.SERVER }}:/opt/bot
