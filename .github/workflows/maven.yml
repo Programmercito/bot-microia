@@ -24,16 +24,15 @@ jobs:
         mkdir /opt/config
         touch /opt/config/configv2.properties
         mvn -B package --file pom.xml
-    - name: Upload artifact
+    - name: Upload JAR
       uses: actions/upload-artifact@v3
       with:
         name: package
-        path: target
+        path: target/microservice-0.0.1-SNAPSHOT.jar
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
-
     steps:
     - name: Download artifact
       uses: actions/download-artifact@v3
