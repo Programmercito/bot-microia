@@ -50,7 +50,7 @@ jobs:
         echo "${{ secrets.KEY }}" > ./private_key
         chmod 600 ./private_key
         ls -la
-        ssh -o StrictHostKeyChecking=no -i ./private_key ${{ secrets.USER }}@${{ secrets.SERVER }} "ls -la"
         scp -o StrictHostKeyChecking=no -i ./private_key -r microservice-0.0.1-SNAPSHOT.jar ${{ secrets.USER }}@${{ secrets.SERVER }}:/opt/bot
+        ssh -o StrictHostKeyChecking=no -i ./private_key ${{ secrets.USER }}@${{ secrets.SERVER }} "ls -la"
         
 #        scp -o StrictHostKeyChecking=no -i ./private_key -r target ${{ secrets.USER }}@${{ secrets.SERVER }}:/opt/bot
