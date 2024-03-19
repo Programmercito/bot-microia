@@ -46,6 +46,7 @@ public class ReceiverIa {
         HttpResponse<JsonNode> response = null;
         try {
             String ur = "http://" + message.getTipo() + ":11434/api/generate";
+            System.out.println(ur);
             response = Unirest.post(ur)
                     .header("Content-Type", "application/json")
                     .body(ollamaRequest)
