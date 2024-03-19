@@ -52,6 +52,7 @@ public class ReceiverIa {
                     .asJson();
         } catch (UnirestException e) {
             response = null;
+            e.printStackTrace();
         }
 
         if (response != null) {
@@ -79,8 +80,8 @@ public class ReceiverIa {
         } else {
             System.out.println("Error en la respuesta de la IA");
             MessageSend messerror = new MessageSend();
-            message.setIdchat(message.getIdchat());
-            message.setMessage("Error en la respuesta de la IA, por favor vuelva a intentar en unos momentos");
+            messerror.setIdchat(message.getIdchat());
+            messerror.setMessage("Error en la respuesta de la IA, por favor vuelva a intentar en unos momentos");
             queueSendMessage.queueProcessMessage(messerror);
         }
 
