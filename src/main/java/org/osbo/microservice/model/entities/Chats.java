@@ -24,6 +24,16 @@ public class Chats {
     private String context;
     @Column(name = "cantidad")
     private int cantidad;
+    @Column(name = "usando")
+    private String usando;
+
+    public void setUsando(String usando) {
+        this.usando = usando;
+    }
+
+    public String getUsando() {
+        return this.usando;
+    }
 
     public int getCantidad() {
         return cantidad;

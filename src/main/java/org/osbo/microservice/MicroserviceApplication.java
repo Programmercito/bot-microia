@@ -9,8 +9,7 @@ import kong.unirest.core.Unirest;
 public class MicroserviceApplication {
 
 	public static void main(String[] args) {
-		Unirest.config().connectTimeout(1000000);
-
+		Unirest.config().connectTimeout(3000000);
 		SpringApplication.run(MicroserviceApplication.class, args);
 	}
 

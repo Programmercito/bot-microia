@@ -1,7 +1,5 @@
 package org.osbo.microservice.bot.messages.listeners;
 
-import java.util.stream.IntStream;
-
 import org.osbo.core.arrays.ArrayLong;
 import org.osbo.microservice.bot.messages.pojos.MessageIa;
 import org.osbo.microservice.bot.messages.pojos.MessageSend;
@@ -36,11 +34,13 @@ public class ReceiverIa {
         OllamaRequest ollamaRequest = new OllamaRequest();
 
         if (chat != null) {
+            chat.setUsando("SI");
+            chatService.saveChat(chat);
             ollamaRequest.setContext(ArrayLong.getArrayLong(chat.getContext()));
         }
         if (message.getTipo().equals("bot1llama")) {
             ollamaRequest.setModel("llama2");
-            ollamaRequest.setSystem("talk in spanish how to mario bros");
+            //ollamaRequest.setSystem("talk in spanish how to mario bros");
         }
         ollamaRequest.setPrompt(message.getMessage());
         HttpResponse<JsonNode> response = null;
@@ -85,6 +85,8 @@ public class ReceiverIa {
             messerror.setMessage("Error en la respuesta de la IA, por favor vuelva a intentar en unos momentos");
             queueSendMessage.queueProcessMessage(messerror);
         }
+        chat.setUsando("NO");
+        chatService.saveChat(chat);
 
     }
 }

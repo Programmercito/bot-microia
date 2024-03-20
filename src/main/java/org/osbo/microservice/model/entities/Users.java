@@ -19,8 +19,6 @@ public class Users {
     private String estado;
     @Column(name = "auxiliar")
     private String auxiliar;
-    @Column(name = "conteo")
-    private int conteo;
     @Column(name = "limite_fecha")
     private String limiteFecha;
 

@@ -1,7 +1,5 @@
 package org.osbo.microservice.bot.messages.listeners;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import org.osbo.core.date.DateAdd;
@@ -11,8 +9,10 @@ import org.osbo.microservice.bot.messages.pojos.MessageProcess;
 import org.osbo.microservice.bot.messages.pojos.MessageSend;
 import org.osbo.microservice.bot.messages.queue.QueueIaMessage;
 import org.osbo.microservice.bot.messages.queue.QueueSendMessage;
+import org.osbo.microservice.model.entities.Chats;
 import org.osbo.microservice.model.entities.Servicios;
 import org.osbo.microservice.model.entities.Users;
+import org.osbo.microservice.model.services.ChatService;
 import org.osbo.microservice.model.services.ServiciosService;
 import org.osbo.microservice.model.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ReceiverProcess {
+    
+    @Autowired
+    private ChatService chatService;
     @Autowired
     private QueueSendMessage queueSendMessage;
     @Autowired
@@ -33,8 +36,6 @@ public class ReceiverProcess {
     @JmsListener(destination = "queue.process", containerFactory = "myFactory")
     public void receiveMessage(MessageProcess message) {
         System.out.println("Mensaje recibido");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String fechaActual = LocalDate.now().format(formatter);
 
         MessageSend messageSend = new MessageSend();
         messageSend.setIdchat(message.getIdchat());
@@ -103,12 +104,22 @@ public class ReceiverProcess {
             messageSend.setMessage(me);
             queueSendMessage.queueProcessMessage(messageSend);
         } else {
-            if (user !=null && user.getComando()!=null && user.getComando().equals("bot1llama")) {
-                MessageIa messageIa = new MessageIa();
-                messageIa.setMessage(message.getMessage());
-                messageIa.setIdchat(message.getIdchat());
-                messageIa.setTipo("bot1llama");
-                queueIaMessage.queueProcessMessage(messageIa);
+            if (user != null && user.getComando() != null && user.getComando().equals("bot1llama")) {
+                Chats chat = chatService.getChatByIdUserAndTipo(message.getIdchat(), "bot1llama");
+                boolean porcesando = false;
+                if (chat != null && "SI".equals(chat.getUsando())) {
+                    porcesando = true;
+                }
+                if (porcesando) {
+                    messageSend.setMessage("Se esta procesando su mensaje favor esperar a que responsadamos o intente de nuevo mas tarde");
+                    queueSendMessage.queueProcessMessage(messageSend);                    
+                } else {
+                    MessageIa messageIa = new MessageIa();
+                    messageIa.setMessage(message.getMessage());
+                    messageIa.setIdchat(message.getIdchat());
+                    messageIa.setTipo("bot1llama");
+                    queueIaMessage.queueProcessMessage(messageIa);
+                }
             } else {
                 messageSend.setMessage("No entiendo el mensaje, si tienes dudas usa /start para mas opciones");
                 queueSendMessage.queueProcessMessage(messageSend);
