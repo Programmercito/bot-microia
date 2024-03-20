@@ -34,10 +34,16 @@ public class ReceiverIa {
         OllamaRequest ollamaRequest = new OllamaRequest();
 
         if (chat != null) {
-            chat.setUsando("SI");
-            chatService.saveChat(chat);
             ollamaRequest.setContext(ArrayLong.getArrayLong(chat.getContext()));
+        }else{
+            chat = new Chats();
+            chat.setIduser(message.getIdchat());
+            chat.setTipo(message.getTipo());
+            chat.setCantidad( 0);
         }
+        chat.setUsando("SI");
+        chatService.saveChat(chat);
+
         if (message.getTipo().equals("bot1llama")) {
             ollamaRequest.setModel("llama2");
             //ollamaRequest.setSystem("talk in spanish how to mario bros");
@@ -60,19 +66,12 @@ public class ReceiverIa {
             String res = response.getBody().getObject().getString("response");
             JSONArray arra = response.getBody().getObject().getJSONArray("context");
             String context = arra.join(",");
-            if (chat == null) {
-                chat = new Chats();
-                chat.setIduser(message.getIdchat());
-                chat.setTipo(message.getTipo());
-                chat.setCantidad( 0);
-            }
             chat.setCantidad(chat.getCantidad() + 1);
             chat.setContext(context);
             if (chat.getCantidad() >= 15) {
                 chat.setCantidad(0);
                 chat.setContext("");
             }
-            chatService.saveChat(chat);
             MessageSend respuestaia = new MessageSend();
             respuestaia.setIdchat(message.getIdchat());
             respuestaia.setMessage(res + " " + chat.getCantidad() + "/15");
