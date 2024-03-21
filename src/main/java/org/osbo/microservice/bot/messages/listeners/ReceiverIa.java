@@ -68,8 +68,8 @@ public class ReceiverIa {
             String context = arra.join(",");
             chat.setCantidad(chat.getCantidad() + 1);
             chat.setContext(context);
-            if (chat.getCantidad() >= 15) {
-                chat.setCantidad(0);
+            if (chat.getCantidad() >= 16) {
+                chat.setCantidad(1);
                 chat.setContext("");
             }
             MessageSend respuestaia = new MessageSend();

@@ -61,7 +61,8 @@ public class ReceiverProcess {
                     + ", como estas? Yo soy un bot con IA para responderte a diferentes cosas cuento con los siguientes servicios: \n"
                     +
                     "1. /init: Iniciar el bot\n" +
-                    "2. /help: Ayuda\n";
+                    "2. /stop: Reiniciar conversacion con el bot\n" +
+                    "3. /help: Ayuda\n";
             messageSend.setMessage(me);
             queueSendMessage.queueProcessMessage(messageSend);
         } else if (message.getMessage().startsWith("/init")) {
@@ -71,7 +72,14 @@ public class ReceiverProcess {
             messageSend.setMessage(me);
             queueSendMessage.queueProcessMessage(messageSend);
         } else if (message.getMessage().startsWith("/stop")) {
-            me = "Bot detenido";
+            Chats chat = chatService.getChatByIdUserAndTipo(message.getIdchat(), user.getComando());
+            if (chat!=null){
+                chat.setUsando("NO");
+                chat.setContext("");
+                chat.setCantidad(1);
+                chatService.saveChat(chat);
+            }
+            me = "Conversacion reseteada";
             messageSend.setMessage(me);
             queueSendMessage.queueProcessMessage(messageSend);
         } else if (message.getMessage().startsWith("/bot1llama")) {
