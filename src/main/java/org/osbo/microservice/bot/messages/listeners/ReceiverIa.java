@@ -34,19 +34,21 @@ public class ReceiverIa {
         OllamaRequest ollamaRequest = new OllamaRequest();
 
         if (chat != null) {
-            ollamaRequest.setContext(ArrayLong.getArrayLong(chat.getContext()));
-        }else{
+            if (!"".equals(chat.getContext())) {
+                ollamaRequest.setContext(ArrayLong.getArrayLong(chat.getContext()));
+            }
+        } else {
             chat = new Chats();
             chat.setIduser(message.getIdchat());
             chat.setTipo(message.getTipo());
-            chat.setCantidad( 0);
+            chat.setCantidad(0);
         }
         chat.setUsando("SI");
         chatService.saveChat(chat);
 
         if (message.getTipo().equals("bot1llama")) {
             ollamaRequest.setModel("llama2");
-            //ollamaRequest.setSystem("talk in spanish how to mario bros");
+            // ollamaRequest.setSystem("talk in spanish how to mario bros");
         }
         ollamaRequest.setPrompt(message.getMessage());
         HttpResponse<JsonNode> response = null;
