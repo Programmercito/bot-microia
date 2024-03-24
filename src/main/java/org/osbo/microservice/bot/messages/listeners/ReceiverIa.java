@@ -65,19 +65,27 @@ public class ReceiverIa {
         }
 
         if (response != null) {
-            String res = response.getBody().getObject().getString("response");
-            JSONArray arra = response.getBody().getObject().getJSONArray("context");
-            String context = arra.join(",");
-            chat.setCantidad(chat.getCantidad() + 1);
-            chat.setContext(context);
-            if (chat.getCantidad() >= 16) {
-                chat.setCantidad(1);
-                chat.setContext("");
+            try {
+                String res = response.getBody().getObject().getString("response");
+                JSONArray arra = response.getBody().getObject().getJSONArray("context");
+                String context = arra.join(",");
+                chat.setCantidad(chat.getCantidad() + 1);
+                chat.setContext(context);
+                if (chat.getCantidad() >= 6) {
+                    chat.setCantidad(1);
+                    chat.setContext("");
+                }
+                MessageSend respuestaia = new MessageSend();
+                respuestaia.setIdchat(message.getIdchat());
+                respuestaia.setMessage(res + " " + chat.getCantidad() + "/5");
+                queueSendMessage.queueProcessMessage(respuestaia);
+            } catch (Exception e) {
+                System.out.println("Error en la respuesta de la IA");
+                MessageSend messerror = new MessageSend();
+                messerror.setIdchat(message.getIdchat());
+                messerror.setMessage("Error en la respuesta de la IA, por favor vuelva a intentar en unos momentos");
+                queueSendMessage.queueProcessMessage(messerror);
             }
-            MessageSend respuestaia = new MessageSend();
-            respuestaia.setIdchat(message.getIdchat());
-            respuestaia.setMessage(res + " " + chat.getCantidad() + "/15");
-            queueSendMessage.queueProcessMessage(respuestaia);
 
         } else {
             System.out.println("Error en la respuesta de la IA");
