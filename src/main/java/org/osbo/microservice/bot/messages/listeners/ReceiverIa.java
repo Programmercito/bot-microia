@@ -54,7 +54,7 @@ public class ReceiverIa {
         ollamaRequest.setPrompt(message.getMessage());
         HttpResponse<JsonNode> response = null;
         String deb = PropertiesBot.getPropertie("bot.debug");
-        if ("true".equals(deb)) {
+        if (!"true".equals(deb)) {
             try {
                 String ur = "http://" + message.getTipo() + ":11434/api/generate";
                 System.out.println(ur);
@@ -82,13 +82,14 @@ public class ReceiverIa {
                 }
                 chat.setCantidad(chat.getCantidad() + 1);
                 chat.setContext(context);
-                if (chat.getCantidad() >= 6) {
-                    chat.setCantidad(1);
+                int mostrar=chat.getCantidad();
+                if (chat.getCantidad() >= 5 ) {
+                    chat.setCantidad(0);
                     chat.setContext("");
                 }
                 MessageSend respuestaia = new MessageSend();
                 respuestaia.setIdchat(message.getIdchat());
-                respuestaia.setMessage(res + " " + chat.getCantidad() + "/5");
+                respuestaia.setMessage(res + " " + mostrar + "/5");
                 queueSendMessage.queueProcessMessage(respuestaia);
             } catch (Exception e) {
                 System.out.println("Error en la respuesta de la IA");
