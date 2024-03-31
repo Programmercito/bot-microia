@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 
+import jakarta.annotation.PostConstruct;
+
 @Component
 public class BotReader {
     String token = PropertiesBot.getPropertie("bot.tokenprincipal");
@@ -17,6 +19,7 @@ public class BotReader {
     @Autowired
     QueueProcessMessage queueProcess;
 
+    @PostConstruct
     public void process() {
         bot.setUpdatesListener(updates -> {
             updates.forEach(update -> {
