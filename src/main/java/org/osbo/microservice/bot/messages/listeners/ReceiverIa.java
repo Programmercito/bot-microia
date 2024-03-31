@@ -1,6 +1,7 @@
 package org.osbo.microservice.bot.messages.listeners;
 
 import org.osbo.core.arrays.ArrayLong;
+import org.osbo.core.bots.properties.PropertiesBot;
 import org.osbo.microservice.bot.messages.pojos.MessageIa;
 import org.osbo.microservice.bot.messages.pojos.MessageSend;
 import org.osbo.microservice.bot.messages.pojos.OllamaRequest;
@@ -52,23 +53,33 @@ public class ReceiverIa {
         }
         ollamaRequest.setPrompt(message.getMessage());
         HttpResponse<JsonNode> response = null;
-        try {
-            String ur = "http://" + message.getTipo() + ":11434/api/generate";
-            System.out.println(ur);
-            response = Unirest.post(ur)
-                    .header("Content-Type", "application/json")
-                    .body(ollamaRequest)
-                    .asJson();
-        } catch (UnirestException e) {
-            response = null;
-            e.printStackTrace();
+        String deb = PropertiesBot.getPropertie("bot.debug");
+        if ("true".equals(deb)) {
+            try {
+                String ur = "http://" + message.getTipo() + ":11434/api/generate";
+                System.out.println(ur);
+                response = Unirest.post(ur)
+                        .header("Content-Type", "application/json")
+                        .body(ollamaRequest)
+                        .asJson();
+            } catch (UnirestException e) {
+                response = null;
+                e.printStackTrace();
+            }
         }
 
-        if (response != null) {
+        if (response != null || "true".equals(deb)) {
             try {
-                String res = response.getBody().getObject().getString("response");
-                JSONArray arra = response.getBody().getObject().getJSONArray("context");
-                String context = arra.join(",");
+                String res = "";
+                String context = "";
+                if (!"true".equals(deb)) {
+                    res = response.getBody().getObject().getString("response");
+                    JSONArray arra = response.getBody().getObject().getJSONArray("context");
+                    context = arra.join(",");
+                } else {
+                    res = "Soy la IA respondiendo";
+                    context = "12";
+                }
                 chat.setCantidad(chat.getCantidad() + 1);
                 chat.setContext(context);
                 if (chat.getCantidad() >= 6) {
