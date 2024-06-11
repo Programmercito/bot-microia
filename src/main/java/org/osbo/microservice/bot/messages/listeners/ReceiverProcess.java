@@ -86,6 +86,7 @@ public class ReceiverProcess {
         } else if (message.getMessage().startsWith("/bot1llama") || message.getMessage().startsWith("/bot2llama")) {
             me = "Bot activado";
             user.setComando(message.getMessage().substring(1, 9));
+            me = me + " " + user.getComando() + " ";
             usersService.saveUser(user);
             Servicios servicio;
             servicio = serviciosService.getServicioByUserAndService(message.getIdchat(), "botFree");
