@@ -85,7 +85,7 @@ public class ReceiverProcess {
             queueSendMessage.queueProcessMessage(messageSend);
         } else if (message.getMessage().startsWith("/bot1llama") || message.getMessage().startsWith("/bot2llama")) {
             me = "Bot activado";
-            user.setComando(message.getMessage().substring(1, 9));
+            user.setComando(message.getMessage().substring(1, 10));
             me = me + " " + user.getComando() + " ";
             usersService.saveUser(user);
             Servicios servicio;
@@ -93,7 +93,7 @@ public class ReceiverProcess {
             if (servicio == null) {
                 servicio = new Servicios();
                 servicio.setIduser(message.getIdchat());
-                servicio.setServicio(message.getMessage().substring(1, 9));
+                servicio.setServicio(message.getMessage().substring(1, 10));
                 servicio.setEstado("activo");
                 servicio.setFecha_inicio(new Date());
                 servicio.setFecha_fin(DateAdd.agregarMeses(new Date(), 3));
@@ -116,7 +116,7 @@ public class ReceiverProcess {
         } else {
             if (user != null && user.getComando() != null && user.getComando().equals("bot1llama")
                     || user.getComando().equals("bot2llama")) {
-                Chats chat = chatService.getChatByIdUserAndTipo(message.getIdchat(), user.getComando().substring(0, 8));
+                Chats chat = chatService.getChatByIdUserAndTipo(message.getIdchat(), user.getComando().substring(0, 9));
                 boolean porcesando = false;
                 if (chat != null && "SI".equals(chat.getUsando())) {
                     porcesando = true;
@@ -129,7 +129,7 @@ public class ReceiverProcess {
                     MessageIa messageIa = new MessageIa();
                     messageIa.setMessage(message.getMessage());
                     messageIa.setIdchat(message.getIdchat());
-                    messageIa.setTipo(user.getComando().substring(0, 8));
+                    messageIa.setTipo(user.getComando().substring(0, 9));
                     queueIaMessage.queueProcessMessage(messageIa);
                 }
             } else {
