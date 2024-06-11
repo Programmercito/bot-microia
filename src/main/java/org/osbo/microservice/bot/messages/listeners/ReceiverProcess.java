@@ -114,8 +114,8 @@ public class ReceiverProcess {
             messageSend.setMessage(me);
             queueSendMessage.queueProcessMessage(messageSend);
         } else {
-            if (user != null && user.getComando() != null && user.getComando().equals("bot1llama")
-                    || user.getComando().equals("bot2llama")) {
+            if (user != null && user.getComando() != null && (user.getComando().equals("bot1llama")
+                    || user.getComando().equals("bot2llama"))) {
                 Chats chat = chatService.getChatByIdUserAndTipo(message.getIdchat(), user.getComando().substring(0, 9));
                 boolean porcesando = false;
                 if (chat != null && "SI".equals(chat.getUsando())) {
