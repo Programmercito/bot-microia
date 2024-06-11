@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ReceiverProcess {
-    
+
     @Autowired
     private ChatService chatService;
     @Autowired
@@ -68,12 +68,13 @@ public class ReceiverProcess {
         } else if (message.getMessage().startsWith("/init")) {
             me = "Bots con IA disponibles:\n" +
                     "1. /bot1llama LLama2 general\n" +
+                    "2. /bot2llama LLama3 general\n" +
                     "Pronto mas !!\n";
             messageSend.setMessage(me);
             queueSendMessage.queueProcessMessage(messageSend);
         } else if (message.getMessage().startsWith("/stop")) {
             Chats chat = chatService.getChatByIdUserAndTipo(message.getIdchat(), user.getComando());
-            if (chat!=null){
+            if (chat != null) {
                 chat.setUsando("NO");
                 chat.setContext("");
                 chat.setCantidad(1);
@@ -82,16 +83,16 @@ public class ReceiverProcess {
             me = "Conversacion reseteada";
             messageSend.setMessage(me);
             queueSendMessage.queueProcessMessage(messageSend);
-        } else if (message.getMessage().startsWith("/bot1llama")) {
+        } else if (message.getMessage().startsWith("/bot1llama") || message.getMessage().startsWith("/bot2llama")) {
             me = "Bot activado";
-            user.setComando("bot1llama");
+            user.setComando(message.getMessage().substring(1, 9));
             usersService.saveUser(user);
             Servicios servicio;
             servicio = serviciosService.getServicioByUserAndService(message.getIdchat(), "botFree");
             if (servicio == null) {
                 servicio = new Servicios();
                 servicio.setIduser(message.getIdchat());
-                servicio.setServicio("bot1llama");
+                servicio.setServicio(message.getMessage().substring(1, 9));
                 servicio.setEstado("activo");
                 servicio.setFecha_inicio(new Date());
                 servicio.setFecha_fin(DateAdd.agregarMeses(new Date(), 3));
@@ -112,20 +113,22 @@ public class ReceiverProcess {
             messageSend.setMessage(me);
             queueSendMessage.queueProcessMessage(messageSend);
         } else {
-            if (user != null && user.getComando() != null && user.getComando().equals("bot1llama")) {
-                Chats chat = chatService.getChatByIdUserAndTipo(message.getIdchat(), "bot1llama");
+            if (user != null && user.getComando() != null && user.getComando().equals("bot1llama")
+                    || user.getComando().equals("bot2llama")) {
+                Chats chat = chatService.getChatByIdUserAndTipo(message.getIdchat(), user.getComando().substring(0, 8));
                 boolean porcesando = false;
                 if (chat != null && "SI".equals(chat.getUsando())) {
                     porcesando = true;
                 }
                 if (porcesando) {
-                    messageSend.setMessage("Se esta procesando su mensaje favor esperar a que responsadamos o intente de nuevo mas tarde");
-                    queueSendMessage.queueProcessMessage(messageSend);                    
+                    messageSend.setMessage(
+                            "Se esta procesando su mensaje favor esperar a que responsadamos o intente de nuevo mas tarde");
+                    queueSendMessage.queueProcessMessage(messageSend);
                 } else {
                     MessageIa messageIa = new MessageIa();
                     messageIa.setMessage(message.getMessage());
                     messageIa.setIdchat(message.getIdchat());
-                    messageIa.setTipo("bot1llama");
+                    messageIa.setTipo(user.getComando().substring(0, 8));
                     queueIaMessage.queueProcessMessage(messageIa);
                 }
             } else {

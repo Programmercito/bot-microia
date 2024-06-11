@@ -49,7 +49,8 @@ public class ReceiverIa {
 
         if (message.getTipo().equals("bot1llama")) {
             ollamaRequest.setModel("llama2");
-            // ollamaRequest.setSystem("talk in spanish how to mario bros");
+        } else if (message.getTipo().equals("bot2llama")) {
+            ollamaRequest.setModel("llama3");
         }
         ollamaRequest.setPrompt(message.getMessage());
         HttpResponse<JsonNode> response = null;
@@ -82,8 +83,8 @@ public class ReceiverIa {
                 }
                 chat.setCantidad(chat.getCantidad() + 1);
                 chat.setContext(context);
-                int mostrar=chat.getCantidad();
-                if (chat.getCantidad() >= 5 ) {
+                int mostrar = chat.getCantidad();
+                if (chat.getCantidad() >= 5) {
                     chat.setCantidad(0);
                     chat.setContext("");
                 }
