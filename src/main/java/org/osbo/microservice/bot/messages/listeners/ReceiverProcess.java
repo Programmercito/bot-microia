@@ -1,9 +1,11 @@
 package org.osbo.microservice.bot.messages.listeners;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.osbo.core.date.DateAdd;
 import org.osbo.core.date.DateFormatter;
+import org.osbo.microservice.bot.messages.params.ModelosIa;
 import org.osbo.microservice.bot.messages.pojos.MessageIa;
 import org.osbo.microservice.bot.messages.pojos.MessageProcess;
 import org.osbo.microservice.bot.messages.pojos.MessageSend;
@@ -66,10 +68,12 @@ public class ReceiverProcess {
             messageSend.setMessage(me);
             queueSendMessage.queueProcessMessage(messageSend);
         } else if (message.getMessage().startsWith("/init")) {
-            me = "Bots con IA disponibles:\n" +
-                    "1. /bot1llama LLama2 general\n" +
-                    "2. /bot2llama LLama3 general\n" +
-                    "Pronto mas !!\n";
+            me = "Bots con IA disponibles:\n";
+            int num = 1;
+            for (Map.Entry<String, String> entrada : ModelosIa.getModelos().entrySet()) {
+                me = me + num + ". /" + entrada.getKey() + " " + entrada.getValue() + "\n";
+            }
+            me = me + "Pronto mas !!\n";
             messageSend.setMessage(me);
             queueSendMessage.queueProcessMessage(messageSend);
         } else if (message.getMessage().startsWith("/stop")) {
@@ -83,7 +87,7 @@ public class ReceiverProcess {
             me = "Conversacion reseteada";
             messageSend.setMessage(me);
             queueSendMessage.queueProcessMessage(messageSend);
-        } else if (message.getMessage().startsWith("/bot1llama") || message.getMessage().startsWith("/bot2llama")) {
+        } else if (ModelosIa.getModelos().containsKey(message.getMessage().substring(1))) {
             me = "Bot activado";
             user.setComando(message.getMessage().substring(1, 10));
             me = me + " " + user.getComando() + " ";
@@ -114,8 +118,7 @@ public class ReceiverProcess {
             messageSend.setMessage(me);
             queueSendMessage.queueProcessMessage(messageSend);
         } else {
-            if (user != null && user.getComando() != null && (user.getComando().equals("bot1llama")
-                    || user.getComando().equals("bot2llama"))) {
+            if (user != null && user.getComando() != null && ModelosIa.getModelos().containsKey(user.getComando())) {
                 Chats chat = chatService.getChatByIdUserAndTipo(message.getIdchat(), user.getComando().substring(0, 9));
                 boolean porcesando = false;
                 if (chat != null && "SI".equals(chat.getUsando())) {

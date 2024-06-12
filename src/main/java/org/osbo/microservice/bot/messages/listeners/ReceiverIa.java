@@ -2,6 +2,7 @@ package org.osbo.microservice.bot.messages.listeners;
 
 import org.osbo.core.arrays.ArrayLong;
 import org.osbo.core.bots.properties.PropertiesBot;
+import org.osbo.microservice.bot.messages.params.ModelosIa;
 import org.osbo.microservice.bot.messages.pojos.MessageIa;
 import org.osbo.microservice.bot.messages.pojos.MessageSend;
 import org.osbo.microservice.bot.messages.pojos.OllamaRequest;
@@ -47,11 +48,8 @@ public class ReceiverIa {
         chat.setUsando("SI");
         chatService.saveChat(chat);
 
-        if (message.getTipo().equals("bot1llama")) {
-            ollamaRequest.setModel("llama2");
-        } else if (message.getTipo().equals("bot2llama")) {
-            ollamaRequest.setModel("llama3");
-        }
+        ollamaRequest.setModel(ModelosIa.getModelos().get(message.getTipo()));
+
         ollamaRequest.setPrompt(message.getMessage());
         HttpResponse<JsonNode> response = null;
         String deb = PropertiesBot.getPropertie("bot.debug");
