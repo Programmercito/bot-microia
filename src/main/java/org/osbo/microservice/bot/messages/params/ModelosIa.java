@@ -7,7 +7,7 @@ public class ModelosIa {
 
     private static HashMap<String, String> modelosIa;
 
-    ModelosIa() {
+    static {
         modelosIa = new HashMap<String, String>();
         modelosIa.put("bot1llama", "llama2");
         modelosIa.put("bot2llama", "llama3");
