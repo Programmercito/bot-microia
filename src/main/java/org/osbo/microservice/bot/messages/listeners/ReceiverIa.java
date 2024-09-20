@@ -91,7 +91,8 @@ public class ReceiverIa {
                 respuestaia.setMessage(res + " " + mostrar + "/5");
                 queueSendMessage.queueProcessMessage(respuestaia);
             } catch (Exception e) {
-                System.out.println("Error en la respuesta de la IA");
+                e.printStackTrace();
+                System.out.println("Error en la respuesta de la IA "+e.getMessage());
                 MessageSend messerror = new MessageSend();
                 messerror.setIdchat(message.getIdchat());
                 messerror.setMessage("Error en la respuesta de la IA, por favor vuelva a intentar en unos momentos");
@@ -99,7 +100,8 @@ public class ReceiverIa {
             }
 
         } else {
-            System.out.println("Error en la respuesta de la IA");
+            
+            System.out.println("Error en la respuesta de la IA ");
             MessageSend messerror = new MessageSend();
             messerror.setIdchat(message.getIdchat());
             messerror.setMessage("Error en la respuesta de la IA, por favor vuelva a intentar en unos momentos");
