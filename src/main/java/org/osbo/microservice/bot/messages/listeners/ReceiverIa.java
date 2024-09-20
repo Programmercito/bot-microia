@@ -72,6 +72,7 @@ public class ReceiverIa {
                 String res = "";
                 String context = "";
                 if (!"true".equals(deb)) {
+                    System.out.println(response.getBody().getObject().toString());
                     res = response.getBody().getObject().getString("response");
                     JSONArray arra = response.getBody().getObject().getJSONArray("context");
                     context = arra.join(",");
